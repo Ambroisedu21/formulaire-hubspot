@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formulaire HubSpot RGPD</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    #cookie-banner {
+      background-color: #eee;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    iframe {
+      border: none;
+      width: 100%;
+      height: 800px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="cookie-banner">
+  <p>Ce site utilise des cookies à des fins de suivi HubSpot. Acceptez-vous ?</p>
+  <button onclick="acceptCookies()">Accepter</button>
+  <button onclick="refuseCookies()">Refuser</button>
+</div>
+
+<!-- Formulaire toujours visible -->
+<div id="hubspot-form"></div>
+
+<script>
+  function loadHubSpotForm() {
+    const script = document.createElement("script");
+    script.src = "https://js.hsforms.net/forms/embed/49153213.js";
+    script.defer = true;
+    document.body.appendChild(script);
+
+    const formDiv = document.getElementById("hubspot-form");
+    formDiv.innerHTML = '<div class="hs-form-frame" data-region="na1" data-form-id="1262a4d1-1496-4553-b70d-64bc1e676047" data-portal-id="49153213"></div>';
+  }
+
+  function acceptCookies() {
+    localStorage.setItem("hs_cookies_accepted", "true");
+    loadTrackingScript();
+    document.getElementById("cookie-banner").style.display = "none";
+  }
+
+  function refuseCookies() {
+    localStorage.setItem("hs_cookies_accepted", "false");
+    document.getElementById("cookie-banner").style.display = "none";
+  }
+
+  function loadTrackingScript() {
+    const script = document.createElement("script");
+    script.src = "https://js.hs-scripts.com/49153213.js";
+    script.async = true;
+    document.head.appendChild(script);
+  }
+
+  // Logic on page load
+  const consent = localStorage.getItem("hs_cookies_accepted");
+  if (consent === "true") {
+    loadTrackingScript();
+    document.getElementById("cookie-banner").style.display = "none";
+  } else if (consent === "false") {
+    document.getElementById("cookie-banner").style.display = "none";
+  }
+
+  // Load the form no matter what
+  loadHubSpotForm();
+</script>
+
+</body>
+</html>
