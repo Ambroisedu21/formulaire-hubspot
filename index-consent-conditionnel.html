@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulaire HubSpot avec Consentement</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .cookie-banner {
+      background-color: #f0f0f0; border: 1px solid #ccc;
+      padding: 10px; margin-bottom: 20px;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div id="cookie-banner" class="cookie-banner">
+    <p>Ce site utilise des cookies pour mesurer l’audience et personnaliser le contenu. Acceptez-vous les cookies ?</p>
+    <button onclick="acceptCookies()">Accepter</button>
+    <button onclick="refuseCookies()">Refuser</button>
+  </div>
+
+  <div id="formulaire">
+    <h2>Formulaire de contact</h2>
+    <div class="hs-form-frame"
+      data-region="na1"
+      data-form-id="1262a4d1-1496-4553-b70d-64bc1e676047"
+      data-portal-id="49153213">
+    </div>
+  </div>
+
+  <script>
+    const banner = document.getElementById("cookie-banner");
+
+    // Consentement déjà donné ?
+    const consent = localStorage.getItem("hubspot-cookie-consent");
+    if (consent === "accepted") {
+      loadHubSpot();
+      banner.classList.add("hidden");
+    } else if (consent === "refused") {
+      banner.classList.add("hidden"); // ne charge pas hubspot
+    }
+
+    function acceptCookies() {
+      localStorage.setItem("hubspot-cookie-consent", "accepted");
+      loadHubSpot();
+      banner.classList.add("hidden");
+    }
+
+    function refuseCookies() {
+      localStorage.setItem("hubspot-cookie-consent", "refused");
+      banner.classList.add("hidden");
+    }
+
+    function loadHubSpot() {
+      const script = document.createElement("script");
+      script.src = "https://js.hsforms.net/forms/embed/49153213.js";
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+  </script>
+
+  <button onclick="resetConsent()">Réinitialiser le consentement</button>
+  <script>
+    function resetConsent() {
+      localStorage.removeItem("hubspot-cookie-consent");
+      location.reload();
+    }
+  </script>
+</body>
+</html>
