@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formulaire RGPD - HubSpot API</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    label { display: block; margin-top: 10px; }
+    input { padding: 5px; width: 300px; margin-top: 5px; }
+    button { margin-top: 15px; padding: 10px 20px; }
+    #cookie-banner {
+      background: #f0f0f0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="cookie-banner">
+  <p>Ce site utilise des cookies pour le suivi HubSpot. Acceptez-vous les cookies ?</p>
+  <button onclick="acceptCookies()">Accepter</button>
+  <button onclick="refuseCookies()">Refuser</button>
+</div>
+
+<h2>Formulaire de contact</h2>
+<form id="custom-form">
+  <label>Prénom :
+    <input type="text" name="firstname" required />
+  </label>
+  <label>Nom :
+    <input type="text" name="lastname" required />
+  </label>
+  <label>Email :
+    <input type="email" name="email" required />
+  </label>
+  <button type="submit">Envoyer</button>
+</form>
+
+<p id="status"></p>
+
+<script>
+  const form = document.getElementById("custom-form");
+  const status = document.getElementById("status");
+  let hubspotutk = null;
+
+  const consent = localStorage.getItem("cookie-consent");
+
+  if (consent === "accepted") {
+    // charger le script de suivi et récupérer hubspotutk
+    const script = document.createElement("script");
+    script.src = "https://js.hs-scripts.com/49153213.js";
+    script.async = true;
+    document.head.appendChild(script);
+
+    // attendre que le cookie soit posé
+    setTimeout(() => {
+      hubspotutk = getCookie("hubspotutk");
+    }, 1500);
+  }
+
+  function acceptCookies() {
+    localStorage.setItem("cookie-consent", "accepted");
+    location.reload();
+  }
+
+  function refuseCookies() {
+    localStorage.setItem("cookie-consent", "refused");
+    document.getElementById("cookie-banner").style.display = "none";
+  }
+
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) return match[2];
+    return null;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+
+    const payload = {
+      fields: [
+        { name: "firstname", value: data.get("firstname") },
+        { name: "lastname", value: data.get("lastname") },
+        { name: "email", value: data.get("email") }
+      ],
+      context: {
+        pageUri: window.location.href,
+        pageName: document.title
+      }
+    };
+
+    if (hubspotutk) {
+      payload.context.hutk = hubspotutk;
+    }
+
+    const portalId = "49153213";
+    const formId = "1262a4d1-1496-4553-b70d-64bc1e676047";
+    const url = `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      status.textContent = "✅ Données envoyées à HubSpot !";
+      form.reset();
+    } else {
+      status.textContent = "❌ Une erreur est survenue.";
+    }
+  });
+</script>
+
+</body>
+</html>
