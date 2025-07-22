@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire HubSpot avec gestion des cookies</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        .cookie-banner {
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            padding: 1em;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: none;
+            z-index: 1000;
+        }
+        .cookie-banner button {
+            margin-right: 1em;
+        }
+    </style>
+</head>
+<body>
+
+<h1>formulaire-hubspot</h1>
+
+<!-- Formulaire HubSpot visible en permanence -->
+<div id="hubspot-form">
+    <script src="https://js.hsforms.net/forms/embed/49153213.js" defer></script>
+    <div class="hs-form-frame" data-region="na1" data-form-id="1262a4d1-1496-4553-b70d-64bc1e676047" data-portal-id="49153213"></div>
+</div>
+
+<!-- Bannière de consentement cookie -->
+<div id="cookie-banner" class="cookie-banner">
+    <span>Ce site utilise des cookies pour améliorer votre expérience. Acceptez-vous les cookies ?</span>
+    <button onclick="acceptCookies()">Accepter</button>
+    <button onclick="rejectCookies()">Refuser</button>
+</div>
+
+<script>
+    function acceptCookies() {
+        localStorage.setItem('cookieConsent', 'accepted');
+        loadHubSpotTracking();
+        document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    function rejectCookies() {
+        localStorage.setItem('cookieConsent', 'rejected');
+        document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    function loadHubSpotTracking() {
+        var script = document.createElement('script');
+        script.src = 'https://js.hs-scripts.com/49153213.js';
+        script.type = 'text/javascript';
+        script.async = true;
+        document.head.appendChild(script);
+    }
+
+    window.onload = function () {
+        var consent = localStorage.getItem('cookieConsent');
+        if (!consent) {
+            document.getElementById('cookie-banner').style.display = 'block';
+        } else if (consent === 'accepted') {
+            loadHubSpotTracking();
+        }
+    };
+</script>
+
+</body>
+</html>
