@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire HubSpot avec cookies</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-top: 1px solid #ccc;
+            text-align: center;
+            z-index: 9999;
+        }
+        .cookie-banner button {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>formulaire-hubspot</h1>
+
+    <div id="formulaire-container">
+        <!-- Formulaire HubSpot -->
+        <script src="https://js.hsforms.net/forms/embed/49153213.js" defer></script>
+        <div class="hs-form-frame"
+             data-region="na1"
+             data-form-id="1262a4d1-1496-4553-b70d-64bc1e676047"
+             data-portal-id="49153213"></div>
+    </div>
+
+    <!-- Bannière cookies -->
+    <div class="cookie-banner" id="cookie-banner">
+        Ce site utilise des cookies pour améliorer l'expérience utilisateur.
+        <button onclick="acceptCookies()">Accepter</button>
+        <button onclick="refuseCookies()">Refuser</button>
+    </div>
+
+    <script>
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            document.getElementById('cookie-banner').style.display = 'none';
+            loadTrackingScript();
+        }
+
+        function refuseCookies() {
+            localStorage.setItem('cookiesAccepted', 'false');
+            document.getElementById('cookie-banner').style.display = 'none';
+        }
+
+        function loadTrackingScript() {
+            var script = document.createElement('script');
+            script.src = 'https://js.hs-scripts.com/49153213.js';
+            script.async = true;
+            document.body.appendChild(script);
+        }
+
+        // Charger automatiquement si déjà accepté
+        window.onload = function () {
+            const consent = localStorage.getItem('cookiesAccepted');
+            if (consent === 'true') {
+                document.getElementById('cookie-banner').style.display = 'none';
+                loadTrackingScript();
+            } else if (consent === 'false') {
+                document.getElementById('cookie-banner').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
