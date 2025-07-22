@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulaire HubSpot avec RGPD</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; }
+    #cookie-banner {
+      position: fixed;
+      bottom: 0;
+      background: #f2f2f2;
+      width: 100%;
+      padding: 10px;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+      z-index: 9999;
+    }
+    #cookie-banner p { margin: 0 0 10px 0; }
+    #cookie-banner button {
+      padding: 5px 10px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .hs-form-wrapper { margin-top: 100px; }
+  </style>
+</head>
+<body>
+
+<div id="cookie-banner">
+  <p>Ce site utilise des cookies pour le suivi HubSpot. Acceptez-vous l'utilisation des cookies ?</p>
+  <button id="accept-cookies">Accepter</button>
+  <button id="reject-cookies">Refuser</button>
+</div>
+
+<div class="hs-form-wrapper">
+  <!-- HubSpot Form always visible -->
+  <script src="https://js.hsforms.net/forms/embed/49153213.js" defer></script>
+  <div class="hs-form-frame" data-region="na1" data-form-id="1262a4d1-1496-4553-b70d-64bc1e676047" data-portal-id="49153213"></div>
+</div>
+
+<script>
+  function loadHubSpotTracking() {
+    var script = document.createElement('script');
+    script.src = 'https://js.hs-scripts.com/49153213.js';
+    script.setAttribute('type', 'text/javascript');
+    script.setAttribute('id', 'hs-script-loader');
+    script.setAttribute('async', true);
+    document.head.appendChild(script);
+  }
+
+  const banner = document.getElementById('cookie-banner');
+  const acceptBtn = document.getElementById('accept-cookies');
+  const rejectBtn = document.getElementById('reject-cookies');
+
+  const consent = localStorage.getItem('cookie-consent');
+
+  if (consent === 'accepted') {
+    loadHubSpotTracking();
+    banner.style.display = 'none';
+  } else if (consent === 'rejected') {
+    banner.style.display = 'none';
+  }
+
+  acceptBtn.onclick = () => {
+    localStorage.setItem('cookie-consent', 'accepted');
+    loadHubSpotTracking();
+    banner.style.display = 'none';
+  };
+
+  rejectBtn.onclick = () => {
+    localStorage.setItem('cookie-consent', 'rejected');
+    banner.style.display = 'none';
+  };
+</script>
+
+</body>
+</html>
