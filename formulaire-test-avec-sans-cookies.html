@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulaire HubSpot - Test Cookies</title>
+  <script src="https://js.hsforms.net/forms/v2.js" defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2em;
+    }
+    .btn-container {
+      margin-bottom: 2em;
+    }
+    button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .note {
+      font-size: 0.9em;
+      color: gray;
+    }
+  </style>
+  <script>
+    function loadHubspotForm(withCookies) {
+      document.getElementById("hubspot-form").innerHTML = ""; // Clear any existing form
+
+      if (!withCookies) {
+        // Supprimer le cookie hubspotutk si existant
+        document.cookie = "hubspotutk=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      }
+
+      if (window.hbspt) {
+        hbspt.forms.create({
+          region: "na1",
+          portalId: "49153213",
+          formId: "1262a4d1-1496-4553-b70d-64bc1e676047",
+          target: "#hubspot-form"
+        });
+      }
+    }
+  </script>
+</head>
+<body>
+  <h2>Test du formulaire HubSpot avec ou sans cookies</h2>
+  <p>Choisis un mode pour tester :</p>
+  <div class="btn-container">
+    <button onclick="loadHubspotForm(true)">Charger avec cookies</button>
+    <button onclick="loadHubspotForm(false)">Charger sans cookies</button>
+  </div>
+  <div class="note">⚠️ En mode sans cookies, le formulaire sera affiché sans valeur de cookie <code>hubspotutk</code> (suivi désactivé).</div>
+  <div id="hubspot-form"></div>
+</body>
+</html>
