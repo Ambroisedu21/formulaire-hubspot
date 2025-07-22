@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulaire visible avec ou sans cookies</title>
+  <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+  <script src="https://js.hsforms.net/forms/v2.js" defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2em;
+    }
+    #hubspot-form {
+      margin-top: 2em;
+    }
+  </style>
+  <script>
+    let allowTracking = false;
+
+    window.addEventListener("load", function(){
+      window.cookieconsent.initialise({
+        palette: {
+          popup: { background: "#000" },
+          button: { background: "#f1d600" }
+        },
+        type: "opt-in",
+        content: {
+          message: "Ce site utilise des cookies pour améliorer l’expérience utilisateur.",
+          dismiss: "Refuser",
+          allow: "Accepter",
+          link: "En savoir plus",
+          href: "https://www.cnil.fr/fr/cookies-et-autres-traceurs"
+        },
+        onInitialise: function(status) {
+          allowTracking = (status === 'allow');
+          loadForm();
+        },
+        onStatusChange: function(status) {
+          allowTracking = (status === 'allow');
+          loadForm(true);
+        }
+      });
+    });
+
+    function loadForm(force = false) {
+      const formOptions = {
+        region: "na1",
+        portalId: "49153213",
+        formId: "1262a4d1-1496-4553-b70d-64bc1e676047",
+        target: "#hubspot-form"
+      };
+
+      if (!allowTracking) {
+        formOptions.inlineMessage = "Merci ! (non tracké)";
+        formOptions.onFormReady = function($form) {
+          // supprimer hubspotutk manuellement s'il existe
+          document.cookie = "hubspotutk=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        };
+      }
+
+      // éviter doublon
+      if (force) document.getElementById("hubspot-form").innerHTML = "";
+
+      if (window.hbspt) {
+        hbspt.forms.create(formOptions);
+      }
+    }
+  </script>
+</head>
+<body>
+  <h2>Formulaire toujours visible</h2>
+  <p>Ce formulaire est affiché avec ou sans cookies. Le suivi HubSpot sera activé uniquement si l’utilisateur accepte les cookies.</p>
+
+  <div id="hubspot-form"></div>
+</body>
+</html>
