@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Formulaire HubSpot avec tracking conditionnel + reset</title>
+    <script>
+      function loadTrackingScript() {
+        const s = document.createElement("script");
+        s.type = "text/javascript";
+        s.id = "hs-script-loader";
+        s.async = true;
+        s.defer = true;
+        s.src = "https://js.hs-scripts.com/49153213.js";
+        document.head.appendChild(s);
+      }
+
+      function handleCookies(consent) {
+        localStorage.setItem("cookieConsent", consent);
+        if (consent === "accept") {
+          loadTrackingScript();
+        }
+        document.getElementById("cookie-banner").style.display = "none";
+      }
+
+      function resetConsent() {
+        localStorage.removeItem("cookieConsent");
+        location.reload();
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const consent = localStorage.getItem("cookieConsent");
+        if (consent === "accept") {
+          loadTrackingScript();
+          document.getElementById("cookie-banner").style.display = "none";
+        } else if (consent === "reject") {
+          document.getElementById("cookie-banner").style.display = "none";
+        }
+      });
+    </script>
+    <style>
+      #cookie-banner {
+        background: #eee;
+        padding: 1em;
+        text-align: center;
+        font-family: sans-serif;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        z-index: 9999;
+        box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+      }
+      .hs-form-frame {
+        margin-top: 100px;
+      }
+      #reset-btn {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: #ccc;
+        border: none;
+        padding: 0.5em;
+        cursor: pointer;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="cookie-banner">
+      Ce site utilise des cookies pour améliorer votre expérience.
+      <button onclick="handleCookies('accept')">Accepter</button>
+      <button onclick="handleCookies('reject')">Refuser</button>
+    </div>
+
+    <button id="reset-btn" onclick="resetConsent()">Réinitialiser le consentement</button>
+
+    <!-- Formulaire toujours visible -->
+    <script src="https://js.hsforms.net/forms/embed/49153213.js" defer></script>
+    <div
+      class="hs-form-frame"
+      data-region="na1"
+      data-form-id="1262a4d1-1496-4553-b70d-64bc1e676047"
+      data-portal-id="49153213"
+    ></div>
+  </body>
+</html>
