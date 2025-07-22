@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formulaire HubSpot avec cookies conditionnels</title>
+  <script>
+    function loadHubSpotTracking() {
+      var script = document.createElement('script');
+      script.src = 'https://js.hs-scripts.com/49153213.js';
+      script.type = 'text/javascript';
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+
+    function acceptCookies() {
+      localStorage.setItem('cookies_accepted', 'true');
+      loadHubSpotTracking();
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    function refuseCookies() {
+      localStorage.setItem('cookies_accepted', 'false');
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    window.onload = function () {
+      const consent = localStorage.getItem('cookies_accepted');
+      if (consent === 'true') {
+        loadHubSpotTracking();
+      }
+
+      if (consent === null) {
+        document.getElementById('cookie-banner').style.display = 'block';
+      }
+    };
+  </script>
+  <style>
+    #cookie-banner {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #eee;
+      padding: 1em;
+      text-align: center;
+      z-index: 9999;
+    }
+
+    #cookie-banner button {
+      margin: 0 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="cookie-banner" style="display:none;">
+    Ce site utilise des cookies pour améliorer l'expérience utilisateur.
+    <button onclick="acceptCookies()">Accepter</button>
+    <button onclick="refuseCookies()">Refuser</button>
+  </div>
+
+  <!-- Formulaire HubSpot -->
+  <script src="https://js.hsforms.net/forms/embed/49153213.js" defer></script>
+  <div
+    class="hs-form-frame"
+    data-region="na1"
+    data-form-id="1262a4d1-1496-4553-b70d-64bc1e676047"
+    data-portal-id="49153213"
+  ></div>
+</body>
+</html>
