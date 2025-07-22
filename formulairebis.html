@@ -54,6 +54,9 @@
   </div>
 
   <script>
+    // Spécial version test : toujours afficher la bannière
+    localStorage.removeItem("cookiesAccepted");
+
     function acceptCookies() {
       localStorage.setItem("cookiesAccepted", "true");
       loadHubspotForm();
@@ -68,14 +71,18 @@
 
     function loadHubspotForm() {
       const script = document.createElement("script");
-      script.src = "https://js.hsforms.net/forms/embed/49153213.js";
+      script.src = "https://js.hsforms.net/forms/v2.js";
       script.onload = () => {
-        window.hbspt.forms.create({
-          region: "na1",
-          portalId: "49153213",
-          formId: "1262a4d1-1496-4553-b70d-64bc1e676047",
-          target: "#formulaire"
-        });
+        if (window.hbspt && window.hbspt.forms) {
+          window.hbspt.forms.create({
+            region: "na1",
+            portalId: "49153213",
+            formId: "1262a4d1-1496-4553-b70d-64bc1e676047",
+            target: "#formulaire"
+          });
+        } else {
+          document.getElementById("formulaire").innerHTML = "<p>Erreur : Le formulaire HubSpot n'a pas pu être chargé.</p>";
+        }
       };
       document.body.appendChild(script);
     }
@@ -136,15 +143,7 @@
       });
     }
 
-    // Affichage au chargement de la page
-    const consent = localStorage.getItem("cookiesAccepted");
-    if (consent === "true") {
-      loadHubspotForm();
-      document.getElementById("cookie-banner").classList.add("hidden");
-    } else if (consent === "false") {
-      loadFallbackForm();
-      document.getElementById("cookie-banner").classList.add("hidden");
-    }
+    // Affichage au chargement de la page (consentement retiré donc forçage de la bannière)
   </script>
 </body>
 </html>
