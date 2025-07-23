@@ -78,7 +78,17 @@
             region: "na1",
             portalId: "49153213",
             formId: "1262a4d1-1496-4553-b70d-64bc1e676047",
-            target: "#formulaire"
+            target: "#formulaire",
+            onFormReady: function($form) {
+              var hsContext = $form.find('input[name="hs_context"]');
+              if (hsContext.length) {
+                try {
+                  var contextObj = JSON.parse(hsContext.val());
+                  contextObj.pageName = "Formulaire"; // Spécifie la source du trafic d'origine
+                  hsContext.val(JSON.stringify(contextObj));
+                } catch(e) {}
+              }
+            }
           });
         } else {
           document.getElementById("formulaire").innerHTML = "<p>Erreur : Le formulaire HubSpot n'a pas pu être chargé.</p>";
@@ -115,8 +125,16 @@
             { name: "email", value: form.email.value }
           ],
           context: {
+            hutk: "",
             pageUri: window.location.href,
             pageName: document.title
+          },
+          legalConsentOptions: {
+            consent: {
+              consentToProcess: true,
+              text: "J’accepte que mes données soient traitées dans le cadre du RGPD.",
+              communications: []
+            }
           }
         };
 
@@ -142,8 +160,6 @@
         }
       });
     }
-
-    // Affichage au chargement de la page (consentement retiré donc forçage de la bannière)
   </script>
 </body>
 </html>
